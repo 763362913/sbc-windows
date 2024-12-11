@@ -30,10 +30,18 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif 
 
 #include <stdint.h>
 #include <sys/types.h>
+
+#   if !defined(SBCAPI)
+#       if defined(SBCAPI_EXPORT)
+#           define SBCAPI __declspec(dllexport)
+#       else
+#           define SBCAPI __declspec(dllimport)
+#       endif
+#   endif
 
 /* sampling frequency */
 #define SBC_FREQ_16000		0x00
@@ -91,35 +99,35 @@ struct sbc_struct {
 
 typedef struct sbc_struct sbc_t;
 
-int sbc_init(sbc_t *sbc, unsigned long flags);
-int sbc_reinit(sbc_t *sbc, unsigned long flags);
-int sbc_init_msbc(sbc_t *sbc, unsigned long flags);
-int sbc_init_a2dp(sbc_t *sbc, unsigned long flags,
+SBCAPI int sbc_init(sbc_t *sbc, unsigned long flags);
+SBCAPI int sbc_reinit(sbc_t *sbc, unsigned long flags);
+SBCAPI int sbc_init_msbc(sbc_t *sbc, unsigned long flags);
+SBCAPI int sbc_init_a2dp(sbc_t *sbc, unsigned long flags,
 					const void *conf, size_t conf_len);
-int sbc_reinit_a2dp(sbc_t *sbc, unsigned long flags,
+SBCAPI int sbc_reinit_a2dp(sbc_t *sbc, unsigned long flags,
 					const void *conf, size_t conf_len);
 
-ssize_t sbc_parse(sbc_t *sbc, const void *input, size_t input_len);
+SBCAPI ssize_t sbc_parse(sbc_t *sbc, const void *input, size_t input_len);
 
 /* Decodes ONE input block into ONE output block */
-ssize_t sbc_decode(sbc_t *sbc, const void *input, size_t input_len,
+SBCAPI ssize_t sbc_decode(sbc_t *sbc, const void *input, size_t input_len,
 			void *output, size_t output_len, size_t *written);
 
 /* Encodes ONE input block into ONE output block */
-ssize_t sbc_encode(sbc_t *sbc, const void *input, size_t input_len,
+SBCAPI ssize_t sbc_encode(sbc_t *sbc, const void *input, size_t input_len,
 			void *output, size_t output_len, ssize_t *written);
 
 /* Returns the output block size in bytes */
-size_t sbc_get_frame_length(sbc_t *sbc);
+SBCAPI size_t sbc_get_frame_length(sbc_t *sbc);
 
 /* Returns the time one input/output block takes to play in msec*/
-unsigned sbc_get_frame_duration(sbc_t *sbc);
+SBCAPI unsigned sbc_get_frame_duration(sbc_t *sbc);
 
 /* Returns the input block size in bytes */
-size_t sbc_get_codesize(sbc_t *sbc);
+SBCAPI size_t sbc_get_codesize(sbc_t *sbc);
 
-const char *sbc_get_implementation_info(sbc_t *sbc);
-void sbc_finish(sbc_t *sbc);
+SBCAPI const char *sbc_get_implementation_info(sbc_t *sbc);
+SBCAPI void sbc_finish(sbc_t *sbc);
 
 #ifdef __cplusplus
 }
